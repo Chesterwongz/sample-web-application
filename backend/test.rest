@@ -1,0 +1,33 @@
+GET http://localhost:8000/api/
+
+###
+
+POST http://localhost:8000/api/
+Content-Type: application/json
+
+{
+    "quote": "It always seems impossible until it is done",
+    "by": "Nelson Mandela"
+}
+
+###
+
+PUT http://localhost:8000/api/
+Content-Type: application/json
+
+{"by": "Spiderman's uncle"}
+
+###
+
+PUT http://localhost:8000/api/100
+Content-Type: application/json
+
+{"by": "Spiderman's uncle"}
+
+###
+
+DELETE http://localhost:8000/api/0
+
+###
+
+DELETE http://localhost:8000/api/2
