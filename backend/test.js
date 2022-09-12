@@ -1,7 +1,7 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 import { before, beforeEach, afterEach } from 'mocha';
-import app from './index.js';
+import app from './server.js';
 
 // Configure chai
 chai.use(chaiHttp);
