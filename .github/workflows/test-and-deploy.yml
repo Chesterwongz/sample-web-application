@@ -18,13 +18,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-          path: main
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci  
+    - run: npm install
     - run: npm test
     - name: Deployed successfully!
       run: echo Backend Tests Passed
@@ -35,12 +33,16 @@ jobs:
     steps:
     - name: Checkout Latest Repo
       uses: actions/checkout@v3
-      with:
-        path: main
     
     - name: Generate deployment package
-      run: zip -r deploy.zip * -x "**node_modules**"
+      run: zip -r deploy.zip frontend backend nginx docker-compose.yml
       
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: my-artifact
+        path: ${{ github.workspace }}/deploy.zip
+        
     - name: Get timestamp
       uses: gerred/actions/current-time@master
       id: current-time
