@@ -37,7 +37,7 @@ jobs:
         path: main
     
     - name: Generate deployment package
-      run: zip -r deploy.zip docker-compose.yml nginx frontend backend -x "**node_modules**"
+      run: zip -r deploy.zip docker-compose.yml nginx/ frontend/ backend/ -x "**node_modules**"
       
     - name: Get timestamp
       uses: gerred/actions/current-time@master
