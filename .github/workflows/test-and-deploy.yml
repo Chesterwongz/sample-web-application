@@ -36,13 +36,7 @@ jobs:
     
     - name: Generate deployment package
       run: zip -r deploy.zip frontend backend nginx docker-compose.yml
-      
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v1
-      with:
-        name: my-artifact
-        path: ${{ github.workspace }}/deploy.zip
-        
+
     - name: Get timestamp
       uses: gerred/actions/current-time@master
       id: current-time
