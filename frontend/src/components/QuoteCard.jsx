@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Card, CardContent, Typography, CardActions, Button, Modal, Fade, TextField } from '@mui/material';
+import { BACKEND_URL } from '../routes';
 
 export default function QuoteCard({ index, quote, author, deleteQuote, addQuote, newQuote }) {
   const [openModal, setOpenModal] = useState(false);
@@ -18,7 +19,7 @@ export default function QuoteCard({ index, quote, author, deleteQuote, addQuote,
       setOpenModal(false);
     } else {
       axios
-        .put(`/backend/api/${index}`, { quote: modalQuoteValue.trim(), by: modalAuthorValue.trim() })
+        .put(BACKEND_URL + index, { quote: modalQuoteValue.trim(), by: modalAuthorValue.trim() })
         .then((res) => {
           console.log(res.data);
           setCardQuoteValue(modalQuoteValue.trim());
@@ -116,7 +117,10 @@ export default function QuoteCard({ index, quote, author, deleteQuote, addQuote,
               <Button
                 variant="contained"
                 onClick={handleSave}
-                disabled={modalQuoteValue.trim() === cardQuoteValue.trim() && modalAuthorValue.trim() === cardAuthorValue.trim()}
+                disabled={
+                  modalQuoteValue.trim().length === 0 ||
+                  (modalQuoteValue.trim() === cardQuoteValue.trim() && modalAuthorValue.trim() === cardAuthorValue.trim())
+                }
               >
                 Save
               </Button>

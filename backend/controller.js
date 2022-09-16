@@ -7,6 +7,8 @@ const quotes = [
   },
 ];
 
+const DEFAULT_BY = 'Unknown';
+
 const cleanUpJsonQuote = (req, res) => {
   if (!req.body.quote || typeof req.body.quote !== 'string') {
     res.status(400).json({ message: 'Please enter a quote!' });
@@ -21,7 +23,7 @@ const cleanUpJsonQuote = (req, res) => {
   }
 
   if (!req.body.by || typeof req.body.by !== 'string' || !req.body.by.trim()) {
-    req.body.by = 'Unknown';
+    req.body.by = DEFAULT_BY;
   }
 
   return true;
@@ -48,12 +50,21 @@ export const updateQuote = (req, res) => {
   }
   let isUpdated = false;
   const quoteToUpdate = quotes[index];
-  if (req.body.quote && typeof req.body.quote === 'string') {
-    quoteToUpdate.quote = req.body.quote.trim();
+  if (typeof req.body.quote === 'string') {
+    const newQuote = req.body.quote.trim();
+    if (newQuote.length === 0) {
+      res.status(400).json({ message: 'Please enter a quote!' });
+      return;
+    }
+    quoteToUpdate.quote = newQuote;
     isUpdated = true;
   }
-  if (req.body.by && typeof req.body.by === 'string') {
-    quoteToUpdate.by = req.body.by.trim();
+  if (typeof req.body.by === 'string') {
+    let newBy = req.body.by.trim();
+    if (newBy.length === 0) {
+      newBy = DEFAULT_BY;
+    }
+    quoteToUpdate.by = newBy;
     isUpdated = true;
   }
   if (!isUpdated) {

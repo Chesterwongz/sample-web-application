@@ -4,6 +4,7 @@ import { v4 } from 'uuid';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import Masonry from '@mui/lab/Masonry';
 import QuoteCard from '../components/QuoteCard';
+import { BACKEND_URL } from '../routes';
 
 export default function HomePage() {
   const [quotes, setQuotes] = useState([]);
@@ -14,7 +15,7 @@ export default function HomePage() {
 
   const addQuote = (quote) => {
     axios
-      .post('/backend/api', quote)
+      .post(BACKEND_URL, quote)
       .then((res) => {
         console.log(res.data);
         setQuotes((currQuotes) => [quote, ...currQuotes]);
@@ -24,7 +25,7 @@ export default function HomePage() {
 
   const deleteQuote = (index) => {
     axios
-      .delete(`/backend/api/${index}`)
+      .delete(BACKEND_URL + index)
       .then((res) => {
         console.log(res.data);
         setQuotes((currQuotes) =>
@@ -38,7 +39,7 @@ export default function HomePage() {
 
   useEffect(() => {
     axios
-      .get('backend/api')
+      .get(BACKEND_URL)
       .then((res) => {
         console.log(res.data);
         setQuotes(res.data.data);
@@ -73,7 +74,7 @@ export default function HomePage() {
                 </Typography>
               </Box>
               <Typography variant="h5">
-                {rainLocations == null ? 'Rain at: ' + 'NA' : rainLocations.length == 0 ? 'No rain anywhere :D' : 'Rain at ' + rainLocations.join(' ,')}
+                {rainLocations == null ? 'Rain at: NA' : rainLocations.length === 0 ? 'No rain anywhere :D' : 'Rain at ' + rainLocations.join(' ,')}
               </Typography>
             </Box>
           </Box>

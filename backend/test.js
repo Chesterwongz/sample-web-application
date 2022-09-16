@@ -104,14 +104,28 @@ describe('Quotes', function () {
     });
 
     afterEach(async () => {
-      await chai.request(app).delete('/api/0');
+      await chai.request(app).delete(baseURL + '/0');
+    });
+
+    it('should fail to update quote with blank quote string', async () => {
+      const res = await chai
+        .request(app)
+        .put(baseURL + '/0')
+        .send({
+          quote: '',
+        });
+
+      expect(res.status).to.equal(400);
     });
 
     it('should update quote', async () => {
       const updateFields = {
         quote: updatedQuote,
       };
-      const res = await chai.request(app).put('/api/0').send(updateFields);
+      const res = await chai
+        .request(app)
+        .put(baseURL + '/0')
+        .send(updateFields);
 
       expect(res.status).to.equal(200);
       expect(res.body.data).to.not.be.undefined;
@@ -122,11 +136,28 @@ describe('Quotes', function () {
       const updateFields = {
         by: updatedBy,
       };
-      const res = await chai.request(app).put('/api/0').send(updateFields);
+      const res = await chai
+        .request(app)
+        .put(baseURL + '/0')
+        .send(updateFields);
 
       expect(res.status).to.equal(200);
       expect(res.body.data).to.not.be.undefined;
       expectEqualQuote(res.body.data, { ...testQuote, by: updatedBy });
+    });
+
+    it('should update author with blank by string', async () => {
+      const updateFields = {
+        by: '',
+      };
+      const res = await chai
+        .request(app)
+        .put(baseURL + '/0')
+        .send(updateFields);
+
+      expect(res.status).to.equal(200);
+      expect(res.body.data).to.not.be.undefined;
+      expectEqualQuote(res.body.data, { ...testQuote, by: 'Unknown' });
     });
 
     it('should update quote and author', async () => {
