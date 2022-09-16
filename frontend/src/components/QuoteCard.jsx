@@ -18,7 +18,7 @@ export default function QuoteCard({ index, quote, author, deleteQuote, addQuote,
       setOpenModal(false);
     } else {
       axios
-        .put(`http://localhost:8000/api/${index}`, { quote: modalQuoteValue.trim(), by: modalAuthorValue.trim() })
+        .put(`/backend/api/${index}`, { quote: modalQuoteValue.trim(), by: modalAuthorValue.trim() })
         .then((res) => {
           console.log(res.data);
           setCardQuoteValue(modalQuoteValue.trim());

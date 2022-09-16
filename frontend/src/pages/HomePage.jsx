@@ -14,7 +14,7 @@ export default function HomePage() {
 
   const addQuote = (quote) => {
     axios
-      .post('http://localhost:8000/api', quote)
+      .post('/backend/api', quote)
       .then((res) => {
         console.log(res.data);
         setQuotes((currQuotes) => [quote, ...currQuotes]);
@@ -24,7 +24,7 @@ export default function HomePage() {
 
   const deleteQuote = (index) => {
     axios
-      .delete(`http://localhost:8000/api/${index}`)
+      .delete(`/backend/api/${index}`)
       .then((res) => {
         console.log(res.data);
         setQuotes((currQuotes) =>
@@ -38,7 +38,7 @@ export default function HomePage() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8000/api')
+      .get('backend/api')
       .then((res) => {
         console.log(res.data);
         setQuotes(res.data.data);
