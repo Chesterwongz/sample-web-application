@@ -36,9 +36,16 @@ jobs:
       with:
         path: main
     
+    - run: ls -la
     - name: Generate deployment package
-      run: zip -r deploy.zip docker-compose.yml ./nginx ./frontend/ ./backend -x "**node_modules**"
+      run: zip -r deploy.zip . -x "**node_modules**"
       
+    - name: Upload Artifacts
+    - uses: actions/upload-artifact@v1
+      with:
+        name: my-artifact
+        path: ${{ github.workspace }}/deploy.zip
+        
     - name: Get timestamp
       uses: gerred/actions/current-time@master
       id: current-time
