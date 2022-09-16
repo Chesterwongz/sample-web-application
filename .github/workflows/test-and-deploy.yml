@@ -18,6 +18,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+          path: main
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -32,7 +34,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Latest Repo
-      uses: actions/checkout@main
+      uses: actions/checkout@v3
+      with:
+        path: main
     
     - name: Generate deployment package
       run: zip -r deploy.zip * -x "**node_modules**"
@@ -55,8 +59,8 @@ jobs:
       with:
         aws_access_key: ${{secrets.AWS_ACCESS_KEY_ID}}
         aws_secret_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-        application_name: sample-web-application
-        environment_name: Samplewebapplication-env-1
+        application_name: sample-docker-application
+        environment_name: Sampledockerapplication-env
         region: ap-southeast-1
         version_label: "app-version-${{ steps.format-time.outputs.replaced }}" #Using timestamp for the versions
         deployment_package: ./deploy.zip
