@@ -74,7 +74,7 @@ export default function HomePage() {
                 </Typography>
               </Box>
               <Typography variant="h5">
-                {rainLocations == null ? 'Rain at: NA' : rainLocations.length === 0 ? 'No rain anywhere :D' : 'Rain at ' + rainLocations.join(' ,')}
+                {rainLocations == null ? 'Rain at: NA' : rainLocations.length === 0 ? 'No rain anywhere :D' : 'Rain at ' + rainLocations.join(', ')}
               </Typography>
             </Box>
           </Box>
