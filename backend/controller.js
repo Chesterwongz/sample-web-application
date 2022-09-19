@@ -1,11 +1,4 @@
-const quotes = [
-  { quote: "You're breathtaking!", by: 'Keanu Reeves' },
-  { quote: 'Do or do not. There is no try.', by: 'Yoda' },
-  {
-    quote: 'With great power there must also come -- great responsibility!',
-    by: 'Uncle Ben',
-  },
-];
+import { addQuote as _addQuote, getQuote as _getQuote, getAllQuote as _getAllQuote, deleteQuote as _deleteQuote } from './model.js';
 
 const DEFAULT_BY = 'Unknown';
 
@@ -34,22 +27,22 @@ export const createQuote = (req, res) => {
     return;
   }
   const newQuote = { quote: req.body.quote, by: req.body.by };
-  quotes.unshift(newQuote);
+  _addQuote(newQuote);
   res.status(201).json({ message: 'Quote added', data: newQuote });
 };
 
 export const getAllQuotes = (req, res) => {
-  res.status(200).json({ message: 'Fetched all quotes', data: quotes });
+  res.status(200).json({ message: 'Fetched all quotes', data: _getAllQuote() });
 };
 
 export const updateQuote = (req, res) => {
   const index = req.params.index;
-  if (!quotes[index]) {
+  const quoteToUpdate = _getQuote(index);
+  if (!quoteToUpdate) {
     res.status(400).json({ message: 'Nothing to update!' });
     return;
   }
   let isUpdated = false;
-  const quoteToUpdate = quotes[index];
   if (typeof req.body.quote === 'string') {
     const newQuote = req.body.quote.trim();
     if (newQuote.length === 0) {
@@ -76,11 +69,11 @@ export const updateQuote = (req, res) => {
 
 export const deleteQuote = (req, res) => {
   const index = req.params.index;
-  if (!quotes[index]) {
+  const quoteToBeDeleted = _getQuote(index);
+  if (!quoteToBeDeleted) {
     res.status(400).json({ message: 'Nothing to delete!' });
     return;
   }
-  const quoteToBeDeleted = quotes[index];
-  quotes.splice(index, 1);
+  _deleteQuote(index);
   res.status(200).json({ message: 'Quote has been deleted', data: quoteToBeDeleted });
 };
