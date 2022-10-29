@@ -1,32 +1,37 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Card, CardContent, Typography, CardActions, Button, Modal, Fade, TextField } from '@mui/material';
-import { BACKEND_URL } from '../routes';
+import { QUOTES_API_URL } from '../routes';
 
-export default function QuoteCard({ index, quote, author, deleteQuote, addQuote, newQuote }) {
+export default function QuoteCard({ index, quote, author, deleteQuote, addQuote, newQuote, setErrorDialog }) {
   const [openModal, setOpenModal] = useState(false);
   const [cardQuoteValue, setCardQuoteValue] = useState(quote);
   const [modalQuoteValue, setModalQuoteValue] = useState(quote);
   const [cardAuthorValue, setCardAuthorValue] = useState(author);
-  const [modalAuthorValue, setModalAuthorValue] = useState(author);
 
   const handleSave = () => {
-    if (modalQuoteValue.trim() === cardQuoteValue.trim() && modalAuthorValue.trim() === cardAuthorValue.trim()) return;
+    if (modalQuoteValue.trim() === cardQuoteValue.trim()) return;
     if (newQuote) {
-      addQuote && addQuote({ quote: modalQuoteValue.trim(), by: modalAuthorValue.trim() });
+      addQuote && addQuote({ quote: modalQuoteValue.trim() });
       setModalQuoteValue('');
-      setModalAuthorValue('');
       setOpenModal(false);
     } else {
       axios
-        .put(BACKEND_URL + index, { quote: modalQuoteValue.trim(), by: modalAuthorValue.trim() })
+        .put(QUOTES_API_URL + index, { quote: modalQuoteValue.trim() }, { withCredentials: true })
         .then((res) => {
           console.log(res.data);
           setCardQuoteValue(modalQuoteValue.trim());
-          setCardAuthorValue(modalAuthorValue.trim());
+          setCardAuthorValue(author.trim());
           setOpenModal(false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          if (err.response.data) {
+            setErrorDialog(err.response.data.msgs);
+          } else {
+            setErrorDialog(['Please try again later!']);
+          }
+        });
     }
   };
 
@@ -43,7 +48,6 @@ export default function QuoteCard({ index, quote, author, deleteQuote, addQuote,
   const handleCloseModal = () => {
     setOpenModal(false);
     setModalQuoteValue(cardQuoteValue);
-    setModalAuthorValue(cardAuthorValue);
   };
 
   return (
@@ -101,26 +105,13 @@ export default function QuoteCard({ index, quote, author, deleteQuote, addQuote,
                 value={modalQuoteValue}
                 onChange={(event) => setModalQuoteValue(event.target.value)}
               />
-              <TextField
-                label="by"
-                color="primary"
-                fullWidth
-                focused
-                margin="normal"
-                multiline
-                maxRows={10}
-                value={modalAuthorValue}
-                onChange={(event) => setModalAuthorValue(event.target.value)}
-              />
+              {author && <Typography>- {author}</Typography>}
             </CardContent>
             <CardActions>
               <Button
                 variant="contained"
                 onClick={handleSave}
-                disabled={
-                  modalQuoteValue.trim().length === 0 ||
-                  (modalQuoteValue.trim() === cardQuoteValue.trim() && modalAuthorValue.trim() === cardAuthorValue.trim())
-                }
+                disabled={modalQuoteValue.trim().length === 0 || modalQuoteValue.trim() === cardQuoteValue.trim()}
               >
                 Save
               </Button>

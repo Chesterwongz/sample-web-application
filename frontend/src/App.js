@@ -1,6 +1,10 @@
 import HomePage from './pages/HomePage';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
+import { Button, CssBaseline, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import useTokenLogin from './hooks/useTokenLogin';
+import { UserContext } from './hooks/UserContext';
+import UserDashboard from './components/UserDashboard';
+import { useState } from 'react';
 
 const theme = createTheme({
   palette: {
@@ -35,11 +39,36 @@ const theme = createTheme({
 });
 
 function App() {
+  const { user, setUser } = useTokenLogin();
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogMsg, setDialogMsg] = useState([]);
+  const setErrorDialog = (msgs) => {
+    setIsDialogOpen(true);
+    setDialogMsg(msgs);
+  };
+
+  const closeDialog = () => setIsDialogOpen(false);
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <HomePage />
-    </ThemeProvider>
+    <UserContext.Provider value={{ user, setUser }}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <UserDashboard setErrorDialog={setErrorDialog} />
+        <HomePage setErrorDialog={setErrorDialog} />
+        <Dialog open={isDialogOpen} onClose={closeDialog}>
+          <DialogTitle>Error</DialogTitle>
+          <DialogContent>
+            {dialogMsg.map((msg, index) => {
+              return <DialogContentText key={index}>{msg}</DialogContentText>;
+            })}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeDialog}>Close</Button>
+          </DialogActions>
+        </Dialog>
+      </ThemeProvider>
+    </UserContext.Provider>
   );
 }
 
