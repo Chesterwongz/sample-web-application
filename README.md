@@ -1,2 +1,2 @@
 # sample-web-application
-A simple web application with CI/CD deployment to Elastic Beanstalk, and serveless API call
+A simple web application with CI/CD deployment to Elastic Beanstalk, serveless API call, and user authentication/authorization
